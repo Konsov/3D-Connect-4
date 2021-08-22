@@ -93,7 +93,7 @@ function main() {
         gl.uniform3fv(lightDirectionHandle,  directionalLight);
     
         gl.bindVertexArray(vao);
-        gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0 );
+        gl.drawElements(gl.TRIANGLES, baseModelIndices.length, gl.UNSIGNED_SHORT, 0 );
        
         
         window.requestAnimationFrame(drawScene);
