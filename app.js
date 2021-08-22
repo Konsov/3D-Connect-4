@@ -36,7 +36,7 @@ var lastUpdateTime = (new Date).getTime();
 var indexBuffer;
 var normalBuffer;
 var positionBuffer;
-
+var vao;
 function main() {
 
     // look up where the vertex data needs to go.
@@ -75,7 +75,7 @@ function main() {
     // var viewWorldMatrix = utils.multiplyMatrices(viewMatrix, worldMatrix);/***NEW***/
     // var projectionMatrix = utils.multiplyMatrices(perspectiveMatrix, viewWorldMatrix);/***NEW***/
 
-    var vao = gl.createVertexArray();
+    vao = gl.createVertexArray();
 
     gl.bindVertexArray(vao);
     
@@ -181,4 +181,3 @@ var init = async function() {
 
 window.onload = init;
 //'window' is a JavaScript object (if "canvas", it will not work)
-window.addEventListener("keyup", keyFunction, false);
