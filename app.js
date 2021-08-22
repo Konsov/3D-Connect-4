@@ -75,9 +75,9 @@ var init = async function() {
     var baseModelSerialized = await utils.get_objstr('models/base.obj');
     baseModel = new OBJ.Mesh(baseModelSerialized);
     
-    baseModelVertices = objModel.vertices; //Array of vertices
-    baseModelNormals = objModel.normals; //Array of normals
-    baseModelIndices = objModel.indices; //Array of indices
+    baseModelVertices = baseModel.vertices; //Array of vertices
+    baseModelNormals = baseModel.normals; //Array of normals
+    baseModelIndices = baseModel.indices; //Array of indices
 
     main();
 }
