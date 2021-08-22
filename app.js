@@ -72,7 +72,7 @@ var init = async function() {
       
     // Load models
     //
-    var baseModelSerialized = await utils.get_objstr('models/table.obj');
+    var baseModelSerialized = await utils.get_objstr('models/base.obj');
     baseModel = new OBJ.Mesh(baseModelSerialized);
     
     baseModelVertices = objModel.vertices; //Array of vertices
