@@ -37,6 +37,13 @@ var indexBuffer;
 var normalBuffer;
 var positionBuffer;
 var vao;
+
+var cx= 0;
+var cy= 2.0;
+var cz= 10.0;
+var elev= 15.0;
+var angle = 10.0;
+
 function main() {
 
     // look up where the vertex data needs to go.
@@ -69,7 +76,7 @@ function main() {
     normalMatrixPositionHandle = gl.getUniformLocation(program, 'nMatrix');
 
     worldMatrix = utils.MakeWorld(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0);/***NEW***/
-    viewMatrix = utils.MakeView(0, 2.0, 10.0, 15.0, 10.0);/***NEW***/
+    viewMatrix = utils.MakeView(cx, cy, cz, elev, angle);/***NEW***/
     perspectiveMatrix = utils.MakePerspective(120, gl.canvas.width/gl.canvas.height, 0.1, 100.0);/***NEW***/
 
     // var viewWorldMatrix = utils.multiplyMatrices(viewMatrix, worldMatrix);/***NEW***/
@@ -118,23 +125,23 @@ function drawScene() {
 
   }
 
-// function keyFunction(e){
+function keyFunction(e){
  
-//     if (e.keyCode == 54) {  // 6
-//       Rz-=5.0;
-//     }
-//     if (e.keyCode == 55) {  // 7
-//       Rz+=5.0;
-//     } 
-//     if (e.keyCode == 49) {  // 1
-//       S-=0.1;
-//     }
-//     if (e.keyCode == 50) {  // 2
-//       S+=0.1;
-//     }
+    if (e.keyCode == 50) {  // 4
+      cx-=5.0;
+    }
+    if (e.keyCode == 51) {  // 3
+      cy+=5.0;
+    } 
+    if (e.keyCode == 52) {  // 1
+      cz-=0.1;
+    }
+    
 
-//     window.requestAnimationFrame(drawScene);
-// }
+    window.requestAnimationFrame(drawScene);
+}
+
+
 
 var init = async function() {
 
@@ -181,3 +188,4 @@ var init = async function() {
 
 window.onload = init;
 //'window' is a JavaScript object (if "canvas", it will not work)
+window.addEventListener("keyup", keyFunction, false);
