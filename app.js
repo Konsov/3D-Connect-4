@@ -81,23 +81,19 @@ function main() {
         gl.clearColor(1.0, 1.0, 1.0, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     
-       
         var viewWorldMatrix = utils.multiplyMatrices(viewMatrix, worldMatrix);
         var projectionMatrix = utils.multiplyMatrices(perspectiveMatrix, viewWorldMatrix);
-        gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));
-          
-        gl.uniformMatrix4fv(normalMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(worldMatrix));
         
-    
+        gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));  
+        gl.uniformMatrix4fv(normalMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(worldMatrix));
+
         gl.uniform3fv(materialDiffColorHandle, cubeMaterialColor);
         gl.uniform3fv(lightColorHandle,  directionalLightColor);
         gl.uniform3fv(lightDirectionHandle,  directionalLight);
     
         gl.bindVertexArray(vao);
         gl.drawElements(gl.TRIANGLES, baseModelIndices.length, gl.UNSIGNED_SHORT, 0 );
-       
-        
-        window.requestAnimationFrame(drawScene);
+    
       }
 
 }
