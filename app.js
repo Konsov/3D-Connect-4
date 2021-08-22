@@ -8,7 +8,7 @@ var baseModelNormals;
 
 function main() {
 
-    // look up where the vertex data needs to go.
+        // look up where the vertex data needs to go.
     var positionAttributeLocation = gl.getAttribLocation(program, "a_position");  
     var matrixLocation = gl.getUniformLocation(program, "matrix");
         
