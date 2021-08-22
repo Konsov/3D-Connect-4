@@ -39,6 +39,8 @@ function main() {
     var cubeMaterialColor = [0.5, 0.5, 0.5];
     var lastUpdateTime = (new Date).getTime();
 
+    gl.useProgram(program);
+    
     var positionAttributeLocation = gl.getAttribLocation(program, "inPosition");  
     var normalAttributeLocation = gl.getAttribLocation(program, "inNormal");  
     var matrixLocation = gl.getUniformLocation(program, "matrix");
