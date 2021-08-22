@@ -5,6 +5,37 @@ var baseModelVertices;
 var baseModelIndices;
 var baseModelNormals;
 
+var matrixLocation;
+
+var positionAttributeLocation, normalAttributeLocation;
+
+var materialDiffColorHandle;
+var lightDirectionHandle;
+var lightColorHandle;
+var normalMatrixPositionHandle;
+
+var worldMatrix;
+var viewMatrix;
+var perspectiveMatrix;
+
+
+//define directional light
+var dirLightAlpha = -utils.degToRad(60);
+var dirLightBeta  = -utils.degToRad(120);
+
+var directionalLight = [Math.cos(dirLightAlpha) * Math.cos(dirLightBeta),
+          Math.sin(dirLightAlpha),
+          Math.cos(dirLightAlpha) * Math.sin(dirLightBeta)
+          ];
+var directionalLightColor = [0.1, 1.0, 1.0];
+
+//Define material color
+var cubeMaterialColor = [0.5, 0.5, 0.5];
+var lastUpdateTime = (new Date).getTime();
+
+var indexBuffer;
+var normalBuffer;
+var positionBuffer;
 
 function main() {
 
@@ -25,33 +56,21 @@ function main() {
     // // Tell it to use our program (pair of shaders)
     // gl.useProgram(program);
 
-    //define directional light
-    var dirLightAlpha = -utils.degToRad(60);
-    var dirLightBeta  = -utils.degToRad(120);
 
-    var directionalLight = [Math.cos(dirLightAlpha) * Math.cos(dirLightBeta),
-              Math.sin(dirLightAlpha),
-              Math.cos(dirLightAlpha) * Math.sin(dirLightBeta)
-              ];
-    var directionalLightColor = [0.1, 1.0, 1.0];
-
-    //Define material color
-    var cubeMaterialColor = [0.5, 0.5, 0.5];
-    var lastUpdateTime = (new Date).getTime();
 
     gl.useProgram(program);
     
-    var positionAttributeLocation = gl.getAttribLocation(program, "inPosition");  
-    var normalAttributeLocation = gl.getAttribLocation(program, "inNormal");  
-    var matrixLocation = gl.getUniformLocation(program, "matrix");
-    var materialDiffColorHandle = gl.getUniformLocation(program, 'mDiffColor');
-    var lightDirectionHandle = gl.getUniformLocation(program, 'lightDirection');
-    var lightColorHandle = gl.getUniformLocation(program, 'lightColor');
-    var normalMatrixPositionHandle = gl.getUniformLocation(program, 'nMatrix');
+    positionAttributeLocation = gl.getAttribLocation(program, "inPosition");  
+    normalAttributeLocation = gl.getAttribLocation(program, "inNormal");  
+    matrixLocation = gl.getUniformLocation(program, "matrix");
+    materialDiffColorHandle = gl.getUniformLocation(program, 'mDiffColor');
+    lightDirectionHandle = gl.getUniformLocation(program, 'lightDirection');
+    lightColorHandle = gl.getUniformLocation(program, 'lightColor');
+    normalMatrixPositionHandle = gl.getUniformLocation(program, 'nMatrix');
 
-    var worldMatrix = utils.MakeWorld(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0);/***NEW***/
-    var viewMatrix = utils.MakeView(0, 2.0, 10.0, 15.0, 10.0);/***NEW***/
-    var perspectiveMatrix = utils.MakePerspective(120, gl.canvas.width/gl.canvas.height, 0.1, 100.0);/***NEW***/
+    worldMatrix = utils.MakeWorld(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0);/***NEW***/
+    viewMatrix = utils.MakeView(0, 2.0, 10.0, 15.0, 10.0);/***NEW***/
+    perspectiveMatrix = utils.MakePerspective(120, gl.canvas.width/gl.canvas.height, 0.1, 100.0);/***NEW***/
 
     // var viewWorldMatrix = utils.multiplyMatrices(viewMatrix, worldMatrix);/***NEW***/
     // var projectionMatrix = utils.multiplyMatrices(perspectiveMatrix, viewWorldMatrix);/***NEW***/
@@ -60,45 +79,62 @@ function main() {
 
     gl.bindVertexArray(vao);
     
-    var positionBuffer = gl.createBuffer();
+    positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(baseModelVertices), gl.STATIC_DRAW);
     gl.enableVertexAttribArray(positionAttributeLocation);
     gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
 
-    var normalBuffer = gl.createBuffer();
+    normalBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(baseModelNormals), gl.STATIC_DRAW);
     gl.enableVertexAttribArray(normalAttributeLocation);
     gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
 
-    var indexBuffer = gl.createBuffer();
+    indexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(baseModelIndices), gl.STATIC_DRAW); 
     
     drawScene();
-
-    function drawScene() {
-
-        gl.clearColor(1.0, 1.0, 1.0, 1.0);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    
-        var viewWorldMatrix = utils.multiplyMatrices(viewMatrix, worldMatrix);
-        var projectionMatrix = utils.multiplyMatrices(perspectiveMatrix, viewWorldMatrix);
-        
-        gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));  
-        gl.uniformMatrix4fv(normalMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(worldMatrix));
-
-        gl.uniform3fv(materialDiffColorHandle, cubeMaterialColor);
-        gl.uniform3fv(lightColorHandle,  directionalLightColor);
-        gl.uniform3fv(lightDirectionHandle,  directionalLight);
-    
-        gl.bindVertexArray(vao);
-        gl.drawElements(gl.TRIANGLES, baseModelIndices.length, gl.UNSIGNED_SHORT, 0 );
-    
-      }
-
 }
+
+function drawScene() {
+
+    gl.clearColor(1.0, 1.0, 1.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    var viewWorldMatrix = utils.multiplyMatrices(viewMatrix, worldMatrix);
+    var projectionMatrix = utils.multiplyMatrices(perspectiveMatrix, viewWorldMatrix);
+    
+    gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));  
+    gl.uniformMatrix4fv(normalMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(worldMatrix));
+
+    gl.uniform3fv(materialDiffColorHandle, cubeMaterialColor);
+    gl.uniform3fv(lightColorHandle,  directionalLightColor);
+    gl.uniform3fv(lightDirectionHandle,  directionalLight);
+
+    gl.bindVertexArray(vao);
+    gl.drawElements(gl.TRIANGLES, baseModelIndices.length, gl.UNSIGNED_SHORT, 0 );
+
+  }
+
+// function keyFunction(e){
+ 
+//     if (e.keyCode == 54) {  // 6
+//       Rz-=5.0;
+//     }
+//     if (e.keyCode == 55) {  // 7
+//       Rz+=5.0;
+//     } 
+//     if (e.keyCode == 49) {  // 1
+//       S-=0.1;
+//     }
+//     if (e.keyCode == 50) {  // 2
+//       S+=0.1;
+//     }
+
+//     window.requestAnimationFrame(drawScene);
+// }
 
 var init = async function() {
 
@@ -144,3 +180,5 @@ var init = async function() {
 }
 
 window.onload = init;
+//'window' is a JavaScript object (if "canvas", it will not work)
+window.addEventListener("keyup", keyFunction, false);
