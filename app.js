@@ -26,7 +26,7 @@ function main() {
     gl.useProgram(program);
 
     var worldMatrix = utils.MakeWorld(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0);/***NEW***/
-    var viewMatrix = utils.MakeView(0, 20.0, 10.0, 15.0, 10.0);/***NEW***/
+    var viewMatrix = utils.MakeView(0, 60.0, 10.0, 15.0, 10.0);/***NEW***/
     var perspectiveMatrix = utils.MakePerspective(120, gl.canvas.width/gl.canvas.height, 0.1, 100.0);/***NEW***/
 
     var viewWorldMatrix = utils.multiplyMatrices(viewMatrix, worldMatrix);/***NEW***/
