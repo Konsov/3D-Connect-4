@@ -8,7 +8,7 @@ var baseModelNormals;
 
 function main() {
 
-    //     // look up where the vertex data needs to go.
+    // look up where the vertex data needs to go.
     // var positionAttributeLocation = gl.getAttribLocation(program, "a_position");  
     // var matrixLocation = gl.getUniformLocation(program, "matrix");
         
@@ -25,7 +25,7 @@ function main() {
     // // Tell it to use our program (pair of shaders)
     // gl.useProgram(program);
 
-     //define directional light
+    //define directional light
     var dirLightAlpha = -utils.degToRad(60);
     var dirLightBeta  = -utils.degToRad(120);
 
@@ -35,9 +35,9 @@ function main() {
               ];
     var directionalLightColor = [0.1, 1.0, 1.0];
 
-  //Define material color
-  var cubeMaterialColor = [0.5, 0.5, 0.5];
-  var lastUpdateTime = (new Date).getTime();
+    //Define material color
+    var cubeMaterialColor = [0.5, 0.5, 0.5];
+    var lastUpdateTime = (new Date).getTime();
 
     var positionAttributeLocation = gl.getAttribLocation(program, "inPosition");  
     var normalAttributeLocation = gl.getAttribLocation(program, "inNormal");  
@@ -57,6 +57,7 @@ function main() {
     var vao = gl.createVertexArray();
 
     gl.bindVertexArray(vao);
+    
     var positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(baseModelVertices), gl.STATIC_DRAW);
