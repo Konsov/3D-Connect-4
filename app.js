@@ -25,7 +25,7 @@ function main() {
     // Tell it to use our program (pair of shaders)
     gl.useProgram(program);
 
-    var worldMatrix = utils.MakeWorld(-3.0, 1.0, -1.0, 0.0, 0.0, 0.0, 2.0);/***NEW***/
+    var worldMatrix = utils.MakeWorld(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0);/***NEW***/
     var viewMatrix = utils.MakeView(0, 2.0, 10.0, 15.0, 10.0);/***NEW***/
     var perspectiveMatrix = utils.MakePerspective(120, gl.canvas.width/gl.canvas.height, 0.1, 100.0);/***NEW***/
 
