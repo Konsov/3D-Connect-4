@@ -25,7 +25,7 @@ function main() {
     // Tell it to use our program (pair of shaders)
     gl.useProgram(program);
 
-    var worldMatrix = utils.MakeWorld(-10.0, 3.0, -5.0, 20.0, 47.0, 110.0, 2.0);/***NEW***/
+    var worldMatrix = utils.MakeWorld(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0);/***NEW***/
     var viewMatrix = utils.MakeView(0, 2.0, 10.0, 15.0, 10.0);/***NEW***/
     var perspectiveMatrix = utils.MakePerspective(120, gl.canvas.width/gl.canvas.height, 0.1, 100.0);/***NEW***/
 
@@ -55,10 +55,10 @@ var init = async function() {
     }
 
     utils.resizeCanvasToDisplaySize(gl.canvas);
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);  
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    gl.clearColor(0.85, 0.85, 0.85, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.enable(gl.DEPTH_TEST);
-    gl.clearColor(0, 0, 0, 0);
 
 
     // Initialize Program
