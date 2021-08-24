@@ -1,127 +1,187 @@
-var program;
 
-var baseModel;
-var baseModelVertices;
-var baseModelIndices;
-var baseModelNormals;
-
-var matrixLocation;
-
-var positionAttributeLocation, normalAttributeLocation;
-
-var materialDiffColorHandle;
-var lightDirectionHandle;
-var lightColorHandle;
-var normalMatrixPositionHandle;
-var vertexMatrixPositionHandle;
-
-var worldMatrix;
-var viewMatrix;
-var perspectiveMatrix;
+function computeModelData(object) {
+    object.drawInfo.vertices = models[object.drawInfo.name].vertices;
+    object.drawInfo.indices = models[object.drawInfo.name].indices;
+    object.drawInfo.normals = models[object.drawInfo.name].vertexNormals;
+    object.drawInfo.texCoord = models[object.drawInfo.name].textures;
+}
 
 
-//define directional light
-var lightColor = [1.0, 1.0, 1.0];
-var lightPos = [-3.0, 8.5, -1.0];
-var lightTarget = 10;
-var lightDecay = 2;
-
-var lightPosLocation;
-var lightTargetLocation;
-var lightDecayLocation;
-  
-
-//Define material color
-var cubeMaterialColor = [1.0, 0.5, 0.5];
-var lastUpdateTime = (new Date).getTime();
-
-var indexBuffer;
-var normalBuffer;
-var positionBuffer;
-var vao;
-
-
-var cx= -3.0;
-var cy= 7.0;
-var cz = 4;
-var elev=  -55.0;
-var angle = 0.0;
-
-function main() {
-
-    gl.useProgram(program);
+function createBuffers(object){
     
-    positionAttributeLocation = gl.getAttribLocation(program, "inPosition");  
-    normalAttributeLocation = gl.getAttribLocation(program, "inNormal");  
-    matrixLocation = gl.getUniformLocation(program, "matrix");
-    materialDiffColorHandle = gl.getUniformLocation(program, 'mDiffColor');
-    lightColorHandle = gl.getUniformLocation(program, 'LAlightColor');
-    vertexMatrixPositionHandle = gl.getUniformLocation(program, "pMatrix");
-    normalMatrixPositionHandle = gl.getUniformLocation(program, "nMatrix");
-
-    lightPosLocation = gl.getUniformLocation(program, "LAPos");
-    lightTargetLocation = gl.getUniformLocation(program, "LATarget");
-    lightDecayLocation = gl.getUniformLocation(program, "LADecay");
-  
-
     vao = gl.createVertexArray();
-
-    gl.bindVertexArray(vao);
-    
+    gl.bindVertexArray(vao);    
+        
     positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(baseModelVertices), gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(positionAttributeLocation);
-    gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
-
-    normalBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(baseModelNormals), gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(normalAttributeLocation);
-    gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(object.drawInfo.vertices), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(object.drawInfo.positionAttributeLocation);
+    gl.vertexAttribPointer(object.drawInfo.positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
 
     indexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(baseModelIndices), gl.STATIC_DRAW); 
-    
-    drawScene();
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(object.drawInfo.indices), gl.STATIC_DRAW);
 
-    function drawScene() {
+    normalBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(object.drawInfo.normals), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(object.drawInfo.normalAttributeLocation);
+    gl.vertexAttribPointer(object.drawInfo.normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
 
+    uvBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(object.drawInfo.texCoord), gl.STATIC_DRAW);      
+    gl.vertexAttribPointer(object.drawInfo.uvLocation, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(object.drawInfo.uvLocation);
+
+    return vao;
+
+
+}
+
+var texture;
+function main() {
+
+    // Create scene graph
+    computeSceneGraph();
+
+    gl.useProgram(program);
+
+    texture=gl.createTexture();
+    //In WebGL there are (at least) 8 texture slots, all subsequent
+    //function modifying the state will happen on the active slot
+    //Slots are numbered gl.TEXTUREi, e.g., gl.TEXTURE1, gl.TEXTURE2
+    //Starting from 0
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, texture); //Bound to slot 0
+
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true); //WebGL has inverted uv coordinates
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.generateMipmap(gl.TEXTURE_2D);
+ 
+    // Save loactions
+    objects.forEach(function (object) { 
+        gl.useProgram(object.drawInfo.programInfo);
+
+        object.drawInfo.positionAttributeLocation = gl.getAttribLocation(object.drawInfo.programInfo, "inPosition"); 
+        object.drawInfo.normalAttributeLocation = gl.getAttribLocation(object.drawInfo.programInfo, "inNormal");  
+        object.drawInfo.matrixLocation = gl.getUniformLocation(object.drawInfo.programInfo, "matrix");
+        object.drawInfo.uvLocation = gl.getAttribLocation(object.drawInfo.programInfo, "a_uv");
+        object.drawInfo.vertexMatrixPositionHandle = gl.getUniformLocation(object.drawInfo.programInfo, "pMatrix");
+        object.drawInfo.normalMatrixPositionHandle = gl.getUniformLocation(object.drawInfo.programInfo, "nMatrix");
+        object.drawInfo.textLocation = gl.getUniformLocation(object.drawInfo.programInfo, "sampler");
+        
+    });     
     
-        worldMatrix = utils.MakeWorld(-3.0, 1.0, -1.0, 0.0, 0.0, 0.0, 1.0);
-        viewMatrix = utils.MakeView(cx, cy, cz, elev, angle);
-        perspectiveMatrix = utils.MakePerspective(120, gl.canvas.width/gl.canvas.height, 0.1, 100.0);
     
-       
-        var viewWorldMatrix = utils.multiplyMatrices(viewMatrix, worldMatrix);
+    objects.forEach(function (object) { 
+        
+        computeModelData(object);
+        
+    });   
+
+    objects.forEach(function (object) { 
+        lightPosLocation = gl.getUniformLocation(object.drawInfo.programInfo, "LAPos");
+        lightTargetLocation = gl.getUniformLocation(object.drawInfo.programInfo, "LATarget");
+        lightDecayLocation = gl.getUniformLocation(object.drawInfo.programInfo, "LADecay");
+        lightColorHandle = gl.getUniformLocation(object.drawInfo.programInfo, 'LAlightColor');
+        materialDiffColorHandle = gl.getUniformLocation(object.drawInfo.programInfo, 'mDiffColor');
+    });   
+
+    //
+    // Create buffers
+    //
+    objects.forEach(function (object) {
+        object.drawInfo.vertexArray = createBuffers(object);
+    });
+
+    drawScene()
+}
+
+function drawScene(){
+
+    gl.clearColor(1.0, 1.0, 1.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    var viewMatrix = utils.MakeView(cx, cy, cz, elev, angle);
+    var perspectiveMatrix = utils.MakePerspective(120, gl.canvas.width/gl.canvas.height, 0.1, 100.0);
+    
+    basePositionNode.updateWorldMatrix();
+    
+    objects.forEach(function (object) {
+        var viewWorldMatrix = utils.multiplyMatrices(viewMatrix, object.worldMatrix);
         var projectionMatrix = utils.multiplyMatrices(perspectiveMatrix, viewWorldMatrix);
-            
-        gl.uniformMatrix4fv(normalMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(worldMatrix));
-          
-        gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));
-        gl.uniformMatrix4fv(vertexMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(worldMatrix));
-    
-        gl.uniform3fv(materialDiffColorHandle, cubeMaterialColor);
+
+        gl.uniformMatrix4fv(object.drawInfo.normalMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(object.worldMatrix));
+
+        //Set a the matrix as uniform. Pay attention! this line must be after "useProgram" otherwise
+        //webgl is not able to find the matrixLocation, and then to set its value 
+        gl.uniformMatrix4fv(object.drawInfo.matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix)); 
+
+        gl.uniformMatrix4fv(object.drawInfo.vertexMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(object.worldMatrix));
+
+        gl.uniform3fv(materialDiffColorHandle, [1.0, 1.0, 1.0]);
         gl.uniform3fv(lightColorHandle,  lightColor);
         gl.uniform3fv(lightPosLocation,  lightPos);
         gl.uniform1f(lightTargetLocation,  lightTarget);
         gl.uniform1f(lightDecayLocation,  lightDecay);
-    
-        gl.bindVertexArray(vao);
-        gl.drawElements(gl.TRIANGLES, baseModelIndices.length, gl.UNSIGNED_SHORT, 0 );
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.uniform1i(object.drawInfo.textLocation, 0);
         
-        window.requestAnimationFrame(drawScene);
+        gl.bindVertexArray(object.drawInfo.vertexArray);
+        gl.drawElements(gl.TRIANGLES, object.drawInfo.indices.length, gl.UNSIGNED_SHORT, 0 );
+    });
+}
+
+var init = async function() {
+
+    baseDir = window.location.href.replace(page, '');
+    shaderDir = baseDir+"shaders/"; 
+
+    // Get a WebGL context
+    canvas = document.getElementById("canvas");
+    gl = canvas.getContext("webgl2");
+    if (!gl) {
+        document.write("GL context not opened");
+        return;
+    }
+    utils.resizeCanvasToDisplaySize(gl.canvas);
+       
+      
+       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+       gl.enable(gl.DEPTH_TEST);
+       gl.clearColor(0, 0, 0, 0);
+       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  
+
+    await utils.loadFiles([shaderDir + 'vs.glsl', shaderDir + 'fs.glsl'], function (shaderText) {
+        var vertexShader = utils.createShader(gl, gl.VERTEX_SHADER, shaderText[0]);
+        var fragmentShader = utils.createShader(gl, gl.FRAGMENT_SHADER, shaderText[1]);
     
-      }
-    
-    window.requestAnimationFrame(drawScene);
+        program = utils.createProgram(gl, vertexShader, fragmentShader);
+        });
+      
+    // Load models
+    //
+    var baseModelSerialized = await utils.get_objstr('models/base.obj');
+    baseModel = new OBJ.Mesh(baseModelSerialized);
+
+
+    // Add loaded models to help variable
+    models["base"] = baseModel;
+
+
+    main();
 }
 
 
 
+
 function keyFunction(e){
-    
     
     if (e.keyCode == 49) {  // Camera 1
         cx = -3.0;
@@ -167,48 +227,6 @@ function keyFunction(e){
 }
 
 
-var init = async function() {
-
-    var path = window.location.pathname;
-    var page = path.split("/").pop();
-    baseDir = window.location.href.replace(page, '');
-    shaderDir = baseDir+"shaders/"; 
-
-    // Initialize canvas and gl
-    canvas = document.getElementById("canvas");
-    gl = canvas.getContext('webgl2');
-    
-    if(!gl) {
-        alert('Your browser does not support WebGL 2.0');
-    }
-
-    utils.resizeCanvasToDisplaySize(gl.canvas);
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    gl.clearColor(0.85, 0.85, 0.85, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    gl.enable(gl.DEPTH_TEST);
-
-
-    // Initialize Program
-    await utils.loadFiles([shaderDir + 'vs.glsl', shaderDir + 'fs.glsl'], function (shaderText) {
-        var vertexShader = utils.createShader(gl, gl.VERTEX_SHADER, shaderText[0]);
-        var fragmentShader = utils.createShader(gl, gl.FRAGMENT_SHADER, shaderText[1]);
-    
-        program = utils.createProgram(gl, vertexShader, fragmentShader);
-        });
-        
-      
-    // Load models
-    //
-    var baseModelSerialized = await utils.get_objstr('models/base.obj');
-    baseModel = new OBJ.Mesh(baseModelSerialized);
-    
-    baseModelVertices = baseModel.vertices; //Array of vertices
-    baseModelNormals = baseModel.normals; //Array of normals
-    baseModelIndices = baseModel.indices; //Array of indices
-
-    main();
-}
 
 window.onload = init;
 //'window' is a JavaScript object (if "canvas", it will not work)
