@@ -39,28 +39,34 @@ function createBuffers(object){
 
 }
 
-var texture;
+
 function main() {
 
     // Create scene graph
     computeSceneGraph();
 
     gl.useProgram(program);
+    
+    objects.forEach(function (object) {
+     
+        texture= gl.createTexture();
+        //In WebGL there are (at least) 8 texture slots, all subsequent
+        //function modifying the state will happen on the active slot
+        //Slots are numbered gl.TEXTUREi, e.g., gl.TEXTURE1, gl.TEXTURE2
+        //Starting from 0
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, texture); //Bound to slot 0
 
-    texture=gl.createTexture();
-    //In WebGL there are (at least) 8 texture slots, all subsequent
-    //function modifying the state will happen on the active slot
-    //Slots are numbered gl.TEXTUREi, e.g., gl.TEXTURE1, gl.TEXTURE2
-    //Starting from 0
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, texture); //Bound to slot 0
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true); //WebGL has inverted uv coordinates
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.generateMipmap(gl.TEXTURE_2D);
+        object.drawInfo.textureRef.push(texture);
 
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true); //WebGL has inverted uv coordinates
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.generateMipmap(gl.TEXTURE_2D);
- 
+        
+    });
+
     // Save loactions
     objects.forEach(function (object) { 
         gl.useProgram(object.drawInfo.programInfo);
@@ -129,7 +135,7 @@ function drawScene(){
         gl.uniform1f(lightDecayLocation,  lightDecay);
 
         gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.bindTexture(gl.TEXTURE_2D, object.drawInfo.textureRef[0]);
         gl.uniform1i(object.drawInfo.textLocation, 0);
         
         gl.bindVertexArray(object.drawInfo.vertexArray);
