@@ -104,13 +104,41 @@ function main() {
     drawScene()
 }
 
+function animate() {
+    
+    var currentTime = (new Date).getTime();
+    if (lastUpdateTime) {
+      //currentTime – lastUpdateTime is the time passed between frames
+      if(fluctuate){
+        var deltaC = (3 * (currentTime - lastUpdateTime)) / 15000.0;
+      }else{
+        var deltaC = (3 * (currentTime - lastUpdateTime)) / 2000.0;
+      }
+      
+      if (flag == 0) currentPy += deltaC;
+      else currentPy -= deltaC;
+      if (currentPy >= 6.3) flag = 1;
+      else if ((currentPy <= finalPosition) && !fluctuate){
+            currentTurn = currentTurn + 1;
+            fluctuate = true
+            currentPy = 6;
+            finalPosition = 6;
+      }
+      else if (currentPy <= finalPosition) flag = 0;
+    }
+    objectsPositions[currentTurn].localMatrix = utils.MakeTranslateMatrix(currentPx,currentPy,currentPz);
+    lastUpdateTime = currentTime; //Need to update it for the next frame
+  }
+
 function drawScene(){
 
+    animate()
     gl.clearColor(1.0, 1.0, 1.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     var viewMatrix = utils.MakeView(cx, cy, cz, elev, angle);
     var perspectiveMatrix = utils.MakePerspective(120, gl.canvas.width/gl.canvas.height, 0.1, 100.0);
+    
     
     basePositionNode.updateWorldMatrix();
     
@@ -139,6 +167,9 @@ function drawScene(){
         gl.bindVertexArray(object.drawInfo.vertexArray);
         gl.drawElements(gl.TRIANGLES, object.drawInfo.indices.length, gl.UNSIGNED_SHORT, 0 );
     });
+
+    window.requestAnimationFrame(drawScene);
+
 }
 
 var init = async function() {
@@ -189,54 +220,4 @@ var init = async function() {
 
 
 
-
-function keyFunction(e){
-    
-    if (e.keyCode == 49) {  // Camera 1
-        cx = -3.0;
-        cy = 7.0;
-        cz = 4.0;
-        elev=  -55.0;
-        angle = 0.0;
-    } 
-
-    if (e.keyCode == 50) {  // Camera 2
-        cx = 2.0;
-        cy = 7.0;
-        cz = -1.0;
-        elev=  -55.0;
-        angle = -90.0;
-    } 
-    
-    if (e.keyCode == 51) {  // Camera 3
-        cx = -3.0;
-        cy = 7.0;
-        cz = -6.0;
-        elev = -55.0;
-        angle = 180.0;
-    } 
-
-    if (e.keyCode == 52) {  // Camera 4
-        cx = -8.0;
-        cy = 7.0;
-        cz = -1.0;
-        elev=  -55.0;
-        angle = 90.0;
-    } 
-
-    if (e.keyCode == 53) {  // Camera 5
-        cx = -3.0;
-        cy = 8.5;
-        cz = -1.0;
-        elev=  -90.0;
-        angle = 0.0;
-    } 
-    
-    window.requestAnimationFrame(drawScene);
-}
-
-
-
 window.onload = init;
-//'window' is a JavaScript object (if "canvas", it will not work)
-window.addEventListener("keyup", keyFunction, false);
