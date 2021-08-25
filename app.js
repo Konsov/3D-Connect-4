@@ -1,4 +1,3 @@
-
 function computeModelData(object) {
     object.drawInfo.vertices = models[object.drawInfo.name].vertices;
     object.drawInfo.indices = models[object.drawInfo.name].indices;
@@ -58,13 +57,12 @@ function main() {
         gl.bindTexture(gl.TEXTURE_2D, texture); //Bound to slot 0
 
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true); //WebGL has inverted uv coordinates
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, object.drawInfo.texture);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         gl.generateMipmap(gl.TEXTURE_2D);
         object.drawInfo.textureRef.push(texture);
 
-        
     });
 
     // Save loactions
@@ -173,13 +171,18 @@ var init = async function() {
       
     // Load models
     //
-    var baseModelSerialized = await utils.get_objstr('models/base.obj');
+    var baseModelSerialized = await utils.get_objstr(baseModelSrc);
     baseModel = new OBJ.Mesh(baseModelSerialized);
+
+    var pieceModelSerialized = await utils.get_objstr(pieceModelSrc);
+    pieceModel = new OBJ.Mesh(pieceModelSerialized);
 
 
     // Add loaded models to help variable
     models["base"] = baseModel;
-
+    models["pieceP1"] = pieceModel;
+    models["pieceP2"] = pieceModel;
+    
 
     main();
 }
