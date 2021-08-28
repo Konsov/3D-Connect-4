@@ -121,18 +121,25 @@ function animate() {
       else if (currentPy <= 6 && fluctuate) flag = 0;
       else if ((currentPy <= heights[positionPiece]) && !fluctuate){
             objectsPositions[currentTurn].localMatrix = utils.MakeTranslateMatrix(currentPx,heights[positionPiece],currentPz);
-            currentTurn = currentTurn + 1;
             fluctuate = true
             currentPy = 6;
             if(checkWin()){
                 gameEnded = true;
                 finishScreen()
             }
+            currentTurn = currentTurn + 1;
       }
     }
-    objectsPositions[currentTurn].localMatrix = utils.MakeTranslateMatrix(currentPx,currentPy,currentPz);
-    lastUpdateTime = currentTime; //Need to update it for the next frame
-  
+    if(gameEnded == false){
+        if(currentTurn < objectsPositions.length){
+            objectsPositions[currentTurn].localMatrix = utils.MakeTranslateMatrix(currentPx,currentPy,currentPz);
+            lastUpdateTime = currentTime; //Need to update it for the next frame
+        }else{
+            gameEnded = true;
+            draw = true;
+            finishScreen()
+        }
+    }
   }
 
 function drawScene(){
@@ -143,8 +150,7 @@ function drawScene(){
 
     var viewMatrix = utils.MakeView(cx, cy, cz, elev, angle);
     var perspectiveMatrix = utils.MakePerspective(90, gl.canvas.width/gl.canvas.height, 0.1, 100.0);
-    
-    
+        
     basePositionNode.updateWorldMatrix();
     
     objects.forEach(function (object) {
