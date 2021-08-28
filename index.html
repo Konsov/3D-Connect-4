@@ -2,28 +2,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-  <style type="text/css">
-    body, html { margin: 0px;}
-    canvas {
-      display: block;
-      background-color: whitesmoke;
-    }
-    body {
-      margin: 0px;
-      background-color: gray;
-    }
-  </style> 
- 
-
-
+  <link rel="stylesheet" href="styles/styles.css">
 </head>
 
 <body>
-  <div style="align-items: center;">
-  <canvas id="canvas" center" width="1024" height="768">
-    Your browser does not support HTML5
-  </canvas>
-</div>
+ 
+  <div class="container">
+    <canvas id="canvas" width="1360" height="768">
+      Your browser does not support HTML5
+    </canvas>
+    <div id= "centerBand" class="center">Player 1 WIN!!</div>
+    <button id="watchBoardButton" class="button" onclick="watchWinningBoard();">See Board</button>
+    <button id="restartButton" class="button" onclick="window.location.reload();">Restart</button>
+  </div>
+
 </body>
 
 
@@ -31,6 +23,7 @@
 <script type="text/javascript" src="lib/variables.js"></script>
 <script type="text/javascript" src="lib/game.js"></script>
 <script type="text/javascript" src="lib/scene_graph.js"></script>
+<script type="text/javascript" src="lib/page.js"></script>
 <script type="text/javascript" src="lib/utils.js"></script>
 <script type="text/javascript" src="lib/webgl-obj-loader.min.js"></script>
 <script type="text/javascript" src="app.js"></script>

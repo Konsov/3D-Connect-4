@@ -124,10 +124,15 @@ function animate() {
             currentTurn = currentTurn + 1;
             fluctuate = true
             currentPy = 6;
+            if(checkWin()){
+                gameEnded = true;
+                finishScreen()
+            }
       }
     }
     objectsPositions[currentTurn].localMatrix = utils.MakeTranslateMatrix(currentPx,currentPy,currentPz);
     lastUpdateTime = currentTime; //Need to update it for the next frame
+  
   }
 
 function drawScene(){

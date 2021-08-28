@@ -1,0 +1,79 @@
+body, html { margin: 0px;}
+
+.container {
+  position: relative;
+  width: 1360;
+  height: 768;
+  background-color: whitesmoke;
+  border-width: 10px;
+  border: brown;
+  border-style: solid;
+}
+
+canvas {
+      background-color: whitesmoke;
+    }
+    
+body {
+      margin: 0px;
+      background-color: gray;
+    }
+
+.center {
+      position: absolute;
+      top: 33%;
+      width: 100%;
+      height: 256px;
+      text-align: center;
+      vertical-align: middle;
+      line-height: 256px; 
+      background-color: rgba(211, 102, 12, 0.6);
+            
+      font-size: 70px;
+      color: #f2083a;
+      font-family: "Arial Black", Gadget, sans-serif;
+      text-shadow: 0px 0px 0 rgb(223,-11,39),
+                 1px 1px 0 rgb(204,-30,20),
+                 2px 2px 0 rgb(185,-49,1),
+                 3px 3px 0 rgb(166,-68,0),
+                 4px 4px 0 rgb(147,-87,0),
+                 5px 5px 0 rgb(127,-107,0),
+                 6px 6px 0 rgb(108,-126,0),
+                 7px 7px 0 rgb(89,-145,0),
+                 8px 8px 0 rgb(70,-164,0),
+                 9px 9px 0 rgb(51,-183,0),
+                 10px 10px  0 rgb(32,-202,0),
+                 11px 11px 10px rgba(0,0,0,0.5),
+                 11px 11px 1px rgba(0,0,0,0.5),
+                 0px 0px 10px rgba(0,0,0,.2);
+    }
+
+#centerBand{
+  visibility: hidden;
+}
+
+.button {
+  position: absolute;
+  
+  background-color: orange;
+  border: solid;
+  border-color: black;
+  border-width: 2 px;
+  color: white;
+  padding: 20px;
+  text-align: center;
+	border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#restartButton{
+  top: 90%;
+  left: 1%;
+}
+
+#watchBoardButton{
+  top: 75%;
+  right: 40%;
+  visibility: hidden;
+}
