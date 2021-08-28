@@ -184,7 +184,7 @@ var init = async function() {
         document.write("GL context not opened");
         return;
     }
-    utils.resizeCanvasToDisplaySize(gl.canvas);
+    //utils.resizeCanvasToDisplaySize(gl.canvas);
        
       
        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -207,8 +207,7 @@ var init = async function() {
 
     var pieceModelSerialized = await utils.get_objstr(pieceModelSrc);
     pieceModel = new OBJ.Mesh(pieceModelSerialized);
-
-
+    
     // Add loaded models to help variable
     models["base"] = baseModel;
     models["pieceP1"] = pieceModel;
