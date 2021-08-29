@@ -1,13 +1,23 @@
 body, html { margin: 0px;}
 
-.container {
+.container_game {
   position: relative;
   width: 1360;
   height: 768;
   background-color: whitesmoke;
   border-width: 10px;
-  border: brown;
+  border: orange;
   border-style: solid;
+}
+
+.container_settings {
+  border-width: 10px;
+  border: black;
+  border-style: solid;
+  height: 768;
+  width: 300;
+  background-color: orange;
+  padding-left: 20px;
 }
 
 canvas {
@@ -76,4 +86,22 @@ body {
   top: 75%;
   right: 40%;
   visibility: hidden;
+}
+
+.slider{
+   /* Use flexbox for slider wrapper element */
+   display:flex;
+   /* Direct alignment of content along horizontal axis */
+   flex-direction:row;
+   /* Tell's flexbox to center content around the non-horizontal axis (ie around the vertical axis) */
+   align-items:center;
+}
+
+.slider-label {
+  width:75px; 
+}
+
+.sliders_box{
+  margin-top: 10px;
+  margin-bottom: 10px;
 }

@@ -6,21 +6,71 @@
 </head>
 
 <body>
- 
-  <div class="container">
-    <canvas id="canvas" width="1360" height="768">
-      Your browser does not support HTML5
-    </canvas>
-    <div id= "centerBand" class="center"></div>
-    <button id="watchBoardButton" class="button" onclick="watchWinningBoard();">See Board</button>
-    <button id="restartButton" class="button" onclick="window.location.reload();">Restart</button>
-  </div>
+ <table>
+    <tr>
+      <td>
+        <div class="container_game">
+          <canvas id="canvas" width="1360" height="768">
+            Your browser does not support HTML5
+          </canvas>
+          <div id= "centerBand" class="center"></div>
+          <button id="watchBoardButton" class="button" onclick="watchWinningBoard();">See Board</button>
+          <button id="restartButton" class="button" onclick="window.location.reload();">Restart</button>
+        </div>
+      </td>
+      <td>
+        <div class="container_settings">
+          <p><b>Lights Settings</b></p>
+          
 
+          <p><b>Light Model</b></p>
+          <div>
+            <select id="drop-down" name="" onchange="onDropdownChange(this.value);">
+                <option value="1" selected>Point</option>
+                <option value="2">Directional</option>
+                <option value="3">Spot</option>
+            </select>
+          </div>
+
+          <div class="lightModelPoint_settings">
+            <div class="sliders_box">
+              <div class= "slider" id="lightModelPoint_Px">
+                <span class="slider-label">Px</span>
+                <input id="sliderPx" autocomplete="off" type="range" min="-5" max="5" step="1" onchange="onSliderChange(this.value, this.id);"/>  	
+              </div>
+              <div class= "slider" id="lightModelPoint_Py"> 
+                <span class="slider-label">Py</span>
+                <input id="sliderPy"  autocomplete="off" type="range" min="7" max="14" step="1" onchange="onSliderChange(this.value, this.id);"/>  
+              </div>
+              <div class= "slider" id="lightModelPoint_Pz"> 
+                <span class="slider-label">Pz</span>
+                <input id="sliderPz" autocomplete="off" type="range" min="-5" max="5" step="1"  onchange="onSliderChange(this.value, this.id);"/>  	
+              </div>
+              <div class= "slider" id="lightModelPoint_Decay"> 
+                <span class="slider-label">Decay β</span>
+                <input id="sliderDecay" autocomplete="off" type="range" min="0" max="2" step="1"  onchange="onSliderChange(this.value,this.id);"/>  	
+              </div>
+              <div class= "slider" id="lightModelPoint_TargetDistance"> 
+                <span class="slider-label">Target Distance g.</span>
+                <input id="sliderTargetDistance" autocomplete="off" type="range" min="0" max="15" step="1"  onchange="onSliderChange(this.value,this.id);"/>  	
+              </div>
+            </div>
+          
+            <div id="lightModelPoint_Color">
+              <span>Color</span>
+              <input type="color" id="lightColor" autocomplete="off" onchange="onColorChange(this.value,this.id);">
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
 </body>
 
 
 
 <script type="text/javascript" src="lib/variables.js"></script>
+<script type="text/javascript" src="lib/lights_settings.js"></script>
 <script type="text/javascript" src="lib/game.js"></script>
 <script type="text/javascript" src="lib/scene_graph.js"></script>
 <script type="text/javascript" src="lib/page.js"></script>

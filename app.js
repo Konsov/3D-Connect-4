@@ -156,13 +156,11 @@ function drawScene(){
     objects.forEach(function (object) {
         var viewWorldMatrix = utils.multiplyMatrices(viewMatrix, object.worldMatrix);
         var projectionMatrix = utils.multiplyMatrices(perspectiveMatrix, viewWorldMatrix);
-
-        gl.uniformMatrix4fv(object.drawInfo.normalMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(object.worldMatrix));
-
-        //Set a the matrix as uniform. Pay attention! this line must be after "useProgram" otherwise
-        //webgl is not able to find the matrixLocation, and then to set its value 
+        var normalMatrix = utils.invertMatrix(utils.transposeMatrix(object.worldMatrix));
+        
+        // (world space) i couold use world matrix instead of normalmatrix beacasue object dont have a non uniform scaling
+        gl.uniformMatrix4fv(object.drawInfo.normalMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(normalMatrix));
         gl.uniformMatrix4fv(object.drawInfo.matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix)); 
-
         gl.uniformMatrix4fv(object.drawInfo.vertexMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(object.worldMatrix));
 
         gl.uniform3fv(materialDiffColorHandle, [1.0, 1.0, 1.0]);
