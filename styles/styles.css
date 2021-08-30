@@ -125,7 +125,7 @@ body {
 }
 
 #AmbientLightAmbient{
-  visibility: visible;
+  visibility: hidden;
 }
 
 #AmbientLightHemispheric{
@@ -133,11 +133,11 @@ body {
 }
 
 #LambertReflection{
-  visibility: visible;
+  visibility: hidden;
 }
 
 #PhongReflection{
-  visibility: visible;
+  visibility: hidden;
 }
 
 #BlinnReflection{
