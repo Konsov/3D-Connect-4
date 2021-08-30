@@ -9,9 +9,9 @@ out vec4 outColor;
 
 uniform vec3 mDiffColor; //material diffuse color 
 uniform vec3 LAlightColor; //point light color 
-uniform vec3 LAPos; //point light position
-uniform float LATarget; //point light target
-uniform float LADecay; //point light decay
+uniform vec3 pointPos; //point light position
+uniform float pointTargetG; //point light target
+uniform float pointDecay; //point light decay
 
 uniform sampler2D sampler;
 
@@ -19,8 +19,8 @@ void main() {
     vec3 nNormal = normalize(fsNormal);
     vec3 textureCol = texture(sampler, uvCoord).rgb;
 
-    vec3 lightColorA = LAlightColor * pow(LATarget / length(LAPos - fsPos), LADecay);
-    vec3 lightDirNorm = normalize(LAPos - fsPos);
+    vec3 lightColorA = LAlightColor * pow(pointTargetG / length(pointPos - fsPos), pointDecay);
+    vec3 lightDirNorm = normalize(pointPos - fsPos);
 
     vec3 diffColor = mDiffColor * 0.1 + textureCol * 0.9;
 

@@ -2,8 +2,8 @@ body, html { margin: 0px;}
 
 .container_game {
   position: relative;
-  width: 1360;
-  height: 768;
+  width: 1280;
+  height: 720;
   background-color: whitesmoke;
   border-width: 10px;
   border: orange;
@@ -14,8 +14,8 @@ body, html { margin: 0px;}
   border-width: 10px;
   border: black;
   border-style: solid;
-  height: 768;
-  width: 300;
+  height: 720;
+  width: 260;
   background-color: orange;
   padding-left: 20px;
 }
@@ -101,7 +101,45 @@ body {
   width:75px; 
 }
 
-.sliders_box{
+.inputColor{
   margin-top: 10px;
-  margin-bottom: 10px;
+}
+
+.lightModel_container{
+  position: relative;
+  height: 360px;
+}
+.lightModel{
+  position: absolute;
+  top: 20%;
+}
+
+#lightModelDir{
+  visibility: hidden;
+}
+#lightModelPoint{
+  visibility: visible;
+}
+#lightModelSpot{
+  visibility: hidden;
+}
+
+#AmbientLightAmbient{
+  visibility: visible;
+}
+
+#AmbientLightHemispheric{
+  visibility: hidden;
+}
+
+#LambertReflection{
+  visibility: visible;
+}
+
+#PhongReflection{
+  visibility: visible;
+}
+
+#BlinnReflection{
+  visibility: hidden;
 }

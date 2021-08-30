@@ -14,8 +14,8 @@ function createBuffers(object){
     positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(object.drawInfo.vertices), gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(object.drawInfo.positionAttributeLocation);
-    gl.vertexAttribPointer(object.drawInfo.positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(positionAttributeLocation);
+    gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
 
     indexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
@@ -24,21 +24,29 @@ function createBuffers(object){
     normalBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(object.drawInfo.normals), gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(object.drawInfo.normalAttributeLocation);
-    gl.vertexAttribPointer(object.drawInfo.normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(normalAttributeLocation);
+    gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
 
     uvBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(object.drawInfo.texCoord), gl.STATIC_DRAW);      
-    gl.vertexAttribPointer(object.drawInfo.uvLocation, 2, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(object.drawInfo.uvLocation);
+    gl.vertexAttribPointer(uvLocation, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(uvLocation);
 
     return vao;
 
 
 }
 
+function savelightLocation(){
+    // Light Locations
+    lightPosLocation = gl.getUniformLocation(program, "pointPos");
+    lightTargetLocation = gl.getUniformLocation(program, "pointTargetG");
+    lightDecayLocation = gl.getUniformLocation(program, "pointDecay");
 
+    lightColorHandle = gl.getUniformLocation(program, 'LAlightColor');
+    materialDiffColorHandle = gl.getUniformLocation(program, 'mDiffColor');
+}
 function main() {
 
     // Create scene graph
@@ -66,32 +74,20 @@ function main() {
     });
 
     // Save loactions
-    objects.forEach(function (object) { 
-        gl.useProgram(object.drawInfo.programInfo);
+    positionAttributeLocation = gl.getAttribLocation(program, "inPosition"); 
+    normalAttributeLocation = gl.getAttribLocation(program, "inNormal");  
+    matrixLocation = gl.getUniformLocation(program, "matrix");
+    uvLocation = gl.getAttribLocation(program, "a_uv");
+    vertexMatrixPositionHandle = gl.getUniformLocation(program, "pMatrix");
+    normalMatrixPositionHandle = gl.getUniformLocation(program, "nMatrix");
+    textLocation = gl.getUniformLocation(program, "sampler");
 
-        object.drawInfo.positionAttributeLocation = gl.getAttribLocation(object.drawInfo.programInfo, "inPosition"); 
-        object.drawInfo.normalAttributeLocation = gl.getAttribLocation(object.drawInfo.programInfo, "inNormal");  
-        object.drawInfo.matrixLocation = gl.getUniformLocation(object.drawInfo.programInfo, "matrix");
-        object.drawInfo.uvLocation = gl.getAttribLocation(object.drawInfo.programInfo, "a_uv");
-        object.drawInfo.vertexMatrixPositionHandle = gl.getUniformLocation(object.drawInfo.programInfo, "pMatrix");
-        object.drawInfo.normalMatrixPositionHandle = gl.getUniformLocation(object.drawInfo.programInfo, "nMatrix");
-        object.drawInfo.textLocation = gl.getUniformLocation(object.drawInfo.programInfo, "sampler");
-        
-    });     
-    
-    
+    savelightLocation()
+
     objects.forEach(function (object) { 
         
         computeModelData(object);
         
-    });   
-
-    objects.forEach(function (object) { 
-        lightPosLocation = gl.getUniformLocation(object.drawInfo.programInfo, "LAPos");
-        lightTargetLocation = gl.getUniformLocation(object.drawInfo.programInfo, "LATarget");
-        lightDecayLocation = gl.getUniformLocation(object.drawInfo.programInfo, "LADecay");
-        lightColorHandle = gl.getUniformLocation(object.drawInfo.programInfo, 'LAlightColor');
-        materialDiffColorHandle = gl.getUniformLocation(object.drawInfo.programInfo, 'mDiffColor');
     });   
 
     //
@@ -159,9 +155,9 @@ function drawScene(){
         var normalMatrix = utils.invertMatrix(utils.transposeMatrix(object.worldMatrix));
         
         // (world space) i couold use world matrix instead of normalmatrix beacasue object dont have a non uniform scaling
-        gl.uniformMatrix4fv(object.drawInfo.normalMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(normalMatrix));
-        gl.uniformMatrix4fv(object.drawInfo.matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix)); 
-        gl.uniformMatrix4fv(object.drawInfo.vertexMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(object.worldMatrix));
+        gl.uniformMatrix4fv(normalMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(normalMatrix));
+        gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix)); 
+        gl.uniformMatrix4fv(vertexMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(object.worldMatrix));
 
         gl.uniform3fv(materialDiffColorHandle, [1.0, 1.0, 1.0]);
         gl.uniform3fv(lightColorHandle,  lightColor);

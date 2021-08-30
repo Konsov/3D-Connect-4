@@ -7,7 +7,7 @@ out vec2 uvCoord;
 out vec3 fsNormal;
 out vec3 fsPos;
 
-uniform mat4 matrix; 
+uniform mat4 matrix;      //For world space transformo normal and postions:
 uniform mat4 nMatrix;     //matrix to transform normals
 uniform mat4 pMatrix;     //matrix to transform positions
 
