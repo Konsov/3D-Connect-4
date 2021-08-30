@@ -44,7 +44,7 @@ function savelightLocation(){
     lightTargetLocation = gl.getUniformLocation(program, "pointTargetG");
     lightDecayLocation = gl.getUniformLocation(program, "pointDecay");
 
-    lightColorHandle = gl.getUniformLocation(program, 'LAlightColor');
+    lightColorHandle = gl.getUniformLocation(program, 'pointColor');
     materialDiffColorHandle = gl.getUniformLocation(program, 'mDiffColor');
 }
 function main() {
@@ -160,10 +160,10 @@ function drawScene(){
         gl.uniformMatrix4fv(vertexMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(object.worldMatrix));
 
         gl.uniform3fv(materialDiffColorHandle, [1.0, 1.0, 1.0]);
-        gl.uniform3fv(lightColorHandle,  lightColor);
-        gl.uniform3fv(lightPosLocation,  lightPos);
-        gl.uniform1f(lightTargetLocation,  lightTarget);
-        gl.uniform1f(lightDecayLocation,  lightDecay);
+        gl.uniform3fv(lightColorHandle,  pointColor);
+        gl.uniform3fv(lightPosLocation,  pointPos);
+        gl.uniform1f(lightTargetLocation,  pointTarget);
+        gl.uniform1f(lightDecayLocation,  pointDecay);
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, object.drawInfo.textureRef[0]);

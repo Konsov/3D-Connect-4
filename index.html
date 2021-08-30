@@ -31,16 +31,16 @@
               <option value="2">Spot</option>
             </select>
             
-            <!--DIV DIRECTIONAL LIGHT MOLDE--->
+            <!--DIV DIRECT LIGHT MOLDE--->
             <div class="lightModel" id="lightModelDir">
               <div class="sliders_box">
                 <div class= "slider" id="lightModelDir_Theta">
-                  <span class="slider-label">Dir θ</span>
-                  <input id="sliderDir_Theta" autocomplete="off" type="range" min="-5" max="5" step="1" onchange="onSliderChange(this.value, this.id);"/>  	
+                  <span class="slider-label">Dir &theta;</span>
+                  <input id="sliderDir_Theta" autocomplete="off" type="range" min="0" max="180" onchange="onSliderChange(this.value, this.id);"/>  	
                 </div>
                 <div class= "slider" id="lightModelDir_Phi"> 
-                  <span class="slider-label">Dir φ</span>
-                  <input id="sliderDir_Phi"  autocomplete="off" type="range" min="7" max="14" step="1" onchange="onSliderChange(this.value, this.id);"/>  
+                  <span class="slider-label">Dir &phi;</span>
+                  <input id="sliderDir_Phi"  autocomplete="off" type="range" min="-180" max="180" onchange="onSliderChange(this.value, this.id);"/>  
                 </div>
               </div>
               <div id="lightModelDir_Color">
@@ -54,23 +54,23 @@
               <div class="sliders_box">
                 <div class= "slider" id="lightModelPoint_Px">
                   <span class="slider-label">Px</span>
-                  <input id="sliderPoint_Px" autocomplete="off" type="range" min="-5" max="5" step="1" onchange="onSliderChange(this.value, this.id);"/>  	
+                  <input id="sliderPoint_Px" autocomplete="off" type="range" min="-5" max="5" onchange="onSliderChange(this.value, this.id);"/>  	
                 </div>
                 <div class= "slider" id="lightModelPoint_Py"> 
                   <span class="slider-label">Py</span>
-                  <input id="sliderPoint_Py"  autocomplete="off" type="range" min="7" max="14" step="1" onchange="onSliderChange(this.value, this.id);"/>  
+                  <input id="sliderPoint_Py"  autocomplete="off" type="range" min="7" max="14" onchange="onSliderChange(this.value, this.id);"/>  
                 </div>
                 <div class= "slider" id="lightModelPoint_Pz"> 
                   <span class="slider-label">Pz</span>
-                  <input id="sliderPoint_Pz" autocomplete="off" type="range" min="-5" max="5" step="1"  onchange="onSliderChange(this.value, this.id);"/>  	
+                  <input id="sliderPoint_Pz" autocomplete="off" type="range" min="-5" max="5" onchange="onSliderChange(this.value, this.id);"/>  	
                 </div>
                 <div class= "slider" id="lightModelPoint_Decay"> 
                   <span class="slider-label">Decay β</span>
-                  <input id="sliderPoint_Decay" autocomplete="off" type="range" min="0" max="2" step="1"  onchange="onSliderChange(this.value,this.id);"/>  	
+                  <input id="sliderPoint_Decay" autocomplete="off" type="range" min="0" max="2" onchange="onSliderChange(this.value,this.id);"/>  	
                 </div>
                 <div class= "slider" id="lightModelPoint_TargetDistance"> 
                   <span class="slider-label">Target Distance g.</span>
-                  <input id="sliderPoint_TargetDistance" autocomplete="off" type="range" min="0" max="15" step="1"  onchange="onSliderChange(this.value,this.id);"/>  	
+                  <input id="sliderPoint_TargetDistance" autocomplete="off" type="range" min="0" max="15" onchange="onSliderChange(this.value,this.id);"/>  	
                 </div>
               </div>
               <div id="lightModelPoint_Color">
@@ -84,39 +84,39 @@
               <div class="sliders_box">
                 <div class= "slider" id="lightModelSpot_Px">
                   <span class="slider-label">Px</span>
-                  <input id="sliderSpot_Px" autocomplete="off" type="range" min="-5" max="5" step="1" onchange="onSliderChange(this.value, this.id);"/>  	
+                  <input id="sliderSpot_Px" autocomplete="off" type="range" min="-5" max="5" onchange="onSliderChange(this.value, this.id);"/>  	
                 </div>
                 <div class= "slider" id="lightModelSpot_Py"> 
                   <span class="slider-label">Py</span>
-                  <input id="sliderSpot_Py"  autocomplete="off" type="range" min="7" max="14" step="1" onchange="onSliderChange(this.value, this.id);"/>  
+                  <input id="sliderSpot_Py"  autocomplete="off" type="range" min="7" max="14" onchange="onSliderChange(this.value, this.id);"/>  
                 </div>
                 <div class= "slider" id="lightModelSpot_Pz"> 
                   <span class="slider-label">Pz</span>
-                  <input id="sliderSpot_Pz" autocomplete="off" type="range" min="-5" max="5" step="1"  onchange="onSliderChange(this.value, this.id);"/>  	
+                  <input id="sliderSpot_Pz" autocomplete="off" type="range" min="-5" max="5" onchange="onSliderChange(this.value, this.id);"/>  	
                 </div>
                 <div class= "slider" id="lightModelSpot_Decay"> 
                   <span class="slider-label">Decay β</span>
-                  <input id="sliderSpot_Decay" autocomplete="off" type="range" min="0" max="2" step="1"  onchange="onSliderChange(this.value,this.id);"/>  	
+                  <input id="sliderSpot_Decay" autocomplete="off" type="range" min="0" max="2" onchange="onSliderChange(this.value,this.id);"/>  	
                 </div>
                 <div class= "slider" id="lightModelSpot_TargetDistance"> 
                   <span class="slider-label">Target Distance g.</span>
-                  <input id="sliderSpot_TargetDistance" autocomplete="off" type="range" min="0" max="15" step="1"  onchange="onSliderChange(this.value,this.id);"/>  	
+                  <input id="sliderSpot_TargetDistance" autocomplete="off" type="range" min="0" max="15" onchange="onSliderChange(this.value,this.id);"/>  	
                 </div>
                 <div class= "slider" id="lightModelSpot_Theta">
                   <span class="slider-label">Dir θ</span>
-                  <input id="sliderSpot_Theta" autocomplete="off" type="range" min="-5" max="5" step="1" onchange="onSliderChange(this.value, this.id);"/>  	
+                  <input id="sliderSpot_Theta" autocomplete="off" type="range" min="0" max="180" onchange="onSliderChange(this.value, this.id);"/>  	
                 </div>
                 <div class= "slider" id="lightModelSpot_Phi"> 
                   <span class="slider-label">Dir φ</span>
-                  <input id="sliderSpot_Phi"  autocomplete="off" type="range" min="7" max="14" step="1" onchange="onSliderChange(this.value, this.id);"/>  
+                  <input id="sliderSpot_Phi"  autocomplete="off" type="range" min="-180" max="180" onchange="onSliderChange(this.value, this.id);"/>  
                 </div>
                 <div class= "slider" id="lightModelSpot_ConeIn"> 
                   <span class="slider-label">Cone In</span>
-                  <input id="sliderSpot_ConeIn" autocomplete="off" type="range" min="0" max="15" step="1"  onchange="onSliderChange(this.value,this.id);"/>  	
+                  <input id="sliderSpot_ConeIn" autocomplete="off" type="range" min="0" onchange="onSliderChange(this.value,this.id);"/>  	
                 </div>
                 <div class= "slider" id="lightModelSpot_ConeOut"> 
                   <span class="slider-label">Cone Out</span>
-                  <input id="sliderSpot_ConeOut" autocomplete="off" type="range" min="0" max="15" step="1"  onchange="onSliderChange(this.value,this.id);"/>  	
+                  <input id="sliderSpot_ConeOut" autocomplete="off" type="range" min="0" max="7" onchange="onSliderChange(this.value,this.id);"/>  	
                 </div>
               </div>
               <div id="lightModelSpot_Color">
@@ -145,11 +145,11 @@
             <div class="lightModel" id="AmbientLightHemispheric">
               <div class= "slider" id="Hemispheric_Theta">
                 <span class="slider-label">Dir θ</span>
-                <input id="sliderHemispheric_Theta" autocomplete="off" type="range" min="-5" max="5" step="1" onchange="onSliderChange(this.value, this.id);"/>  	
+                <input id="sliderHemispheric_Theta" autocomplete="off" type="range" min="0" max="180" onchange="onSliderChange(this.value, this.id);"/>  	
               </div>
               <div class= "slider" id="Hemispheric_Phi"> 
                 <span class="slider-label">Dir φ</span>
-                <input id="sliderHemispheric_Phi"  autocomplete="off" type="range" min="7" max="14" step="1" onchange="onSliderChange(this.value, this.id);"/>  
+                <input id="sliderHemispheric_Phi"  autocomplete="off" type="range" min="-180" max="180" onchange="onSliderChange(this.value, this.id);"/>  
               </div>
               <div id="AmbientLightHemispheric_ColorUpper">
                 <span>Upper Color</span>
@@ -176,7 +176,7 @@
             <div class="lightModel" id="LambertReflection">
               <div class= "slider" id="Lambert_Texture"> 
                 <span class="slider-label">Texture</span>
-                <input id="sliderLambert_Texture"  autocomplete="off" type="range" min="7" max="14" step="1" onchange="onSliderChange(this.value, this.id);"/>  
+                <input id="sliderLambert_Texture"  autocomplete="off" type="range" min="0" max="100" onchange="onSliderChange(this.value, this.id);"/>  
               </div>
               <div id="DiffuseLabert_Color">
                 <span>Color</span>
@@ -195,7 +195,7 @@
             <div class="lightModel" id="PhongReflection">
               <div class= "slider" id="Phong_Shiny"> 
                 <span class="slider-label">Shiny</span>
-                <input id="sliderPhong_Shiny"  autocomplete="off" type="range" min="7" max="14" step="1" onchange="onSliderChange(this.value, this.id);"/>  
+                <input id="sliderPhong_Shiny"  autocomplete="off" type="range" min="1" max="20" onchange="onSliderChange(this.value, this.id);"/>  
               </div>
               <div id="SpecularPhong_Color">
                 <span>Color</span>
@@ -205,7 +205,7 @@
             <div class="lightModel" id="BlinnReflection">
               <div class= "slider" id="Blinn_Shiny"> 
                 <span class="slider-label">Shiny</span>
-                <input id="sliderBlinn_Shiny"  autocomplete="off" type="range" min="7" max="14" step="1" onchange="onSliderChange(this.value, this.id);"/>  
+                <input id="sliderBlinn_Shiny"  autocomplete="off" type="range" min="1" max="20" onchange="onSliderChange(this.value, this.id);"/>  
               </div>
               <div id="SpecularBlinn_Color">
                 <span>Color</span>
@@ -220,13 +220,12 @@
 </body>
 
 
-
+<script type="text/javascript" src="lib/utils.js"></script>
 <script type="text/javascript" src="lib/variables.js"></script>
 <script type="text/javascript" src="lib/lights_settings.js"></script>
 <script type="text/javascript" src="lib/game.js"></script>
 <script type="text/javascript" src="lib/scene_graph.js"></script>
 <script type="text/javascript" src="lib/page.js"></script>
-<script type="text/javascript" src="lib/utils.js"></script>
 <script type="text/javascript" src="lib/webgl-obj-loader.min.js"></script>
 <script type="text/javascript" src="app.js"></script>
 <script type="text/javascript" src="lib/input.js"></script>
