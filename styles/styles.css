@@ -133,7 +133,7 @@ body {
 }
 
 #LambertReflection{
-  visibility: hidden;
+  visibility: visible;
 }
 
 #PhongReflection{

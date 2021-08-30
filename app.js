@@ -40,13 +40,101 @@ function createBuffers(object){
 
 function savelightLocation(){
     // Light Locations
-    lightPosLocation = gl.getUniformLocation(program, "pointPos");
-    lightTargetLocation = gl.getUniformLocation(program, "pointTargetG");
-    lightDecayLocation = gl.getUniformLocation(program, "pointDecay");
+    lightTypeLocation = gl.getUniformLocation(program, 'lightType');
+    lightAmbientLocation = gl.getUniformLocation(program, 'lightAmbient');
+    diffuseReflectionLocation = gl.getUniformLocation(program, 'diffuseReflection');
+    diffuseSpecularLocation = gl.getUniformLocation(program, 'diffuseSpecular');
 
-    lightColorHandle = gl.getUniformLocation(program, 'pointColor');
-    materialDiffColorHandle = gl.getUniformLocation(program, 'mDiffColor');
+    //Direct Light Location
+    directDirLocation = gl.getUniformLocation(program, 'directDir');
+    directColorLocation = gl.getUniformLocation(program, 'directColor');
+    
+    //Point Light Location
+    pointPosLocation = gl.getUniformLocation(program, 'pointPos');
+    pointDecayLocation = gl.getUniformLocation(program, 'pointDecay');
+    pointTargetGLocation = gl.getUniformLocation(program, 'pointTargetG');
+    pointColorLocation = gl.getUniformLocation(program, 'pointColor');
+
+    //Spot Light
+    spotColorLocation = gl.getUniformLocation(program, 'spotColor');
+    spotPosLocation = gl.getUniformLocation(program, 'spotPos');
+    spotDecayLocation = gl.getUniformLocation(program, 'spotDecay');
+    spotTargetGLocation = gl.getUniformLocation(program, 'spotTargetG');
+    spotDirLocation = gl.getUniformLocation(program, 'spotDir');
+    spotConeInLocation = gl.getUniformLocation(program, 'spotConeIn');
+    spotConeOutLocation = gl.getUniformLocation(program, 'spotConeOut');
+
+    //Lambert Diffuse
+    lambertColorLocation = gl.getUniformLocation(program, 'lambertColor');
+    lambertTextureLocation = gl.getUniformLocation(program, 'lambertTexture');
+
+    //Ambient light 
+    ambientColorLocation = gl.getUniformLocation(program, 'ambientColor');
+    
+    //Hemisperichal ambient light
+    hemisphericDirLocation = gl.getUniformLocation(program, 'hemisphericDir');
+    ambientLowerColorLocation = gl.getUniformLocation(program, 'ambientLowerColor');
+    ambientUpperColorLocation = gl.getUniformLocation(program, 'ambientUpperColor');
+    
+    // Phong Specular
+    phongColorLocation = gl.getUniformLocation(program, 'phongColor');
+    blinnColorLocation = gl.getUniformLocation(program, 'blinnColor');
+   
+    // Blinn Specular
+    phongShinyLocation = gl.getUniformLocation(program, 'phongShiny');
+    blinnShinyLocation = gl.getUniformLocation(program, 'blinnShiny');
+ 
+    
 }
+
+function setLightsAndReflection(){
+
+    // Settings Variables
+    gl.uniform1f(lightTypeLocation, parseFloat(lightModel));
+    gl.uniform1f(lightAmbientLocation, parseFloat(ambientLight));
+    gl.uniform1f(diffuseReflectionLocation, parseFloat(diffuseReflection));
+    gl.uniform1f(diffuseSpecularLocation, parseFloat(specularReflecion));
+      
+    // //Direct Light
+    gl.uniform3fv(directDirLocation, directDir);
+    gl.uniform4fv(directColorLocation, dirColor);
+    
+    //Point Light
+    gl.uniform3fv(pointPosLocation, pointPos);
+    gl.uniform1f(pointDecayLocation, pointDecay);
+    gl.uniform1f(pointTargetGLocation, pointTarget);
+    gl.uniform4fv(pointColorLocation, pointColor);
+
+    //Spot Light
+    gl.uniform3fv(spotPosLocation, spotPos);
+    gl.uniform1f(spotDecayLocation, spotDecay);
+    gl.uniform1f(spotTargetGLocation, spotTarget);
+    gl.uniform3fv(spotDirLocation, directSpot);
+    gl.uniform1f(spotConeInLocation, spotConeIn);
+    gl.uniform1f(spotConeOutLocation, spotConeOut);
+    gl.uniform4fv(spotColorLocation, spotColor);
+
+    //ambient light
+    gl.uniform4fv(ambientColorLocation, ambientColor);
+    
+    //hemisperich ambient light
+    gl.uniform4fv(ambientLowerColorLocation, hemispericLowerColor);
+    gl.uniform4fv(ambientUpperColorLocation, hemispericUpperColor);
+    gl.uniform3fv(hemisphericDirLocation, directHemisperic);
+    
+    // //Lambert diffuse
+    gl.uniform4fv(lambertColorLocation, lambertColor);
+    gl.uniform1f(lambertTextureLocation, lambertTexture/100);
+    
+    //Phong specular
+    gl.uniform4fv(phongColorLocation, PhongColor);
+    gl.uniform1f(phongShinyLocation, PhongShiny);
+    
+    //blinn specular
+    gl.uniform4fv(blinnColorLocation, BlinnColor);
+    gl.uniform1f(blinnShinyLocation, BlinnShiny);
+}
+
 function main() {
 
     // Create scene graph
@@ -74,6 +162,7 @@ function main() {
     });
 
     // Save loactions
+    eyePositionHandle = gl.getUniformLocation(program, 'eyePosition')
     positionAttributeLocation = gl.getAttribLocation(program, "inPosition"); 
     normalAttributeLocation = gl.getAttribLocation(program, "inNormal");  
     matrixLocation = gl.getUniformLocation(program, "matrix");
@@ -143,7 +232,7 @@ function drawScene(){
     animate()
     gl.clearColor(1.0, 1.0, 1.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
+    var eyePos = [cx, cy, cz];
     var viewMatrix = utils.MakeView(cx, cy, cz, elev, angle);
     var perspectiveMatrix = utils.MakePerspective(90, gl.canvas.width/gl.canvas.height, 0.1, 100.0);
         
@@ -158,12 +247,10 @@ function drawScene(){
         gl.uniformMatrix4fv(normalMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(normalMatrix));
         gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix)); 
         gl.uniformMatrix4fv(vertexMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(object.worldMatrix));
-
-        gl.uniform3fv(materialDiffColorHandle, [1.0, 1.0, 1.0]);
-        gl.uniform3fv(lightColorHandle,  pointColor);
-        gl.uniform3fv(lightPosLocation,  pointPos);
-        gl.uniform1f(lightTargetLocation,  pointTarget);
-        gl.uniform1f(lightDecayLocation,  pointDecay);
+        gl.uniform3fv(eyePositionHandle, eyePos);
+        
+        setLightsAndReflection();
+        
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, object.drawInfo.textureRef[0]);
