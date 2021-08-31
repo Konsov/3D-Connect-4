@@ -73,7 +73,7 @@ vec3 computeLightDir(vec3 sPos, vec3 pPos, vec3 Dir, float lType) {
 }
 
 // Compute light color
-vec4 computeLightColor(vec4 dColor, vec4 sColor, vec4 pColor, float pDecay, vec3 pPos, float sDecay, vec3 spotPosition, float sConeIn, float sConeOut, vec3 dir, float lType) {
+vec4 computeLightColor(vec4 dColor, vec4 sColor, vec4 pColor, float pDecay, vec3 pPos, float sDecay, vec3 spotPosition, float sConeIn, float sConeOut, vec3 sDir, float lType) {
   if (lType == 0.0) {
     // Direct
     return dColor;
@@ -83,8 +83,10 @@ vec4 computeLightColor(vec4 dColor, vec4 sColor, vec4 pColor, float pDecay, vec3
   } else if (lType == 2.0) {
     // Spot
     vec3 spotLightDir = normalize(spotPosition - fsPos);
-    float cosAngle = dot(spotLightDir, spotDir);
-    return sColor * pow(spotTargetG/length(spotPosition - fsPos), sDecay) * clamp(((cosAngle - sConeOut) / (sConeIn - sConeOut)), 0.0, 1.0);
+    float cosAngle = dot(spotLightDir, sDir);
+    float LCosOut = cos(radians(sConeOut / 2.0));
+	  float LCosIn = cos(radians(sConeOut * sConeIn / 2.0));
+    return sColor * pow(spotTargetG/length(spotPosition - fsPos), sDecay) * clamp(((cosAngle - LCosOut) / (LCosIn - LCosOut)), 0.0, 1.0);
     } else {
     return dColor * vec4(0.0, 0.0, 0.0, 1.0);
   }
@@ -146,7 +148,7 @@ void main() {
     vec4 ambientMatColor = ambientColor * 0.2 + textureColor * 0.8;
 
     vec3 lightDir = computeLightDir(spotPos, pointPos, directDir, lightType);
-    vec4 lightCol = computeLightColor(directColor, spotColor, pointColor, pointDecay, pointPos, spotDecay, spotPos, spotConeIn/100.0, spotConeOut, lightDir, lightType);
+    vec4 lightCol = computeLightColor(directColor, spotColor, pointColor, pointDecay, pointPos, spotDecay, spotPos, spotConeIn/100.0, spotConeOut, spotDir,lightType);
 
     vec4 diffuse = computeDiffuse(lightDir, lightCol, nNormal, diffLColor, diffuseReflection);
 
