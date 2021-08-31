@@ -1,3 +1,4 @@
+//Help Function to assing model info to respective Objcet
 function computeModelData(object) {
     object.drawInfo.vertices = models[object.drawInfo.name].vertices;
     object.drawInfo.indices = models[object.drawInfo.name].indices;
@@ -5,7 +6,7 @@ function computeModelData(object) {
     object.drawInfo.texCoord = models[object.drawInfo.name].textures;
 }
 
-
+//Function that Create Buffer
 function createBuffers(object){
     
     vao = gl.createVertexArray();
@@ -38,6 +39,7 @@ function createBuffers(object){
 
 }
 
+//Function that set light for shader
 function savelightLocation(){
     // Light Locations
     lightTypeLocation = gl.getUniformLocation(program, 'lightType');
@@ -87,6 +89,7 @@ function savelightLocation(){
     
 }
 
+//Function that assing respective value to a location for fs
 function setLightsAndReflection(){
 
     // Settings Variables
@@ -142,6 +145,7 @@ function main() {
 
     gl.useProgram(program);
     
+    //LOAD TEXTURE
     objects.forEach(function (object) {
      
         texture= gl.createTexture();
@@ -161,7 +165,7 @@ function main() {
 
     });
 
-    // Save loactions
+    // Save loactions for shraders
     eyePositionHandle = gl.getUniformLocation(program, 'eyePosition')
     positionAttributeLocation = gl.getAttribLocation(program, "inPosition"); 
     normalAttributeLocation = gl.getAttribLocation(program, "inNormal");  
@@ -170,18 +174,18 @@ function main() {
     vertexMatrixPositionHandle = gl.getUniformLocation(program, "pMatrix");
     normalMatrixPositionHandle = gl.getUniformLocation(program, "nMatrix");
     textLocation = gl.getUniformLocation(program, "sampler");
-
+    
+    //Save light location
     savelightLocation()
 
     objects.forEach(function (object) { 
-        
+        //assing model info to respective Objcet
         computeModelData(object);
         
     });   
 
-    //
+
     // Create buffers
-    //
     objects.forEach(function (object) {
         object.drawInfo.vertexArray = createBuffers(object);
     });
@@ -190,11 +194,12 @@ function main() {
 }
 
 function animate() {
-    
+    //Animation for fluctating and inserting
+    //Piece fluctate (Go up and down) Then is go down to his final place
     var currentTime = (new Date).getTime();
     if (lastUpdateTime) {
       //currentTime – lastUpdateTime is the time passed between frames
-      if(fluctuate){
+      if(fluctuate){ // Two velocity, one for fluctating one for inserting
         var deltaC = (3 * (currentTime - lastUpdateTime)) / 15000.0;
       }else{
         var deltaC = (3 * (currentTime - lastUpdateTime)) / 2000.0;
@@ -202,9 +207,9 @@ function animate() {
       
       if (flag == 0) currentPy += deltaC;
       else currentPy -= deltaC;
-      if (currentPy >= 6.3) flag = 1;
+      if (currentPy >= 6.3) flag = 1; //Fluctating from 6.3 to 6 on Y
       else if (currentPy <= 6 && fluctuate) flag = 0;
-      else if ((currentPy <= heights[positionPiece]) && !fluctuate){
+      else if ((currentPy <= heights[positionPiece]) && !fluctuate){ //Then it'go down to Heights[positionPlace] that rappresent hights on the peg
             objectsPositions[currentTurn].localMatrix = utils.MakeTranslateMatrix(currentPx,heights[positionPiece],currentPz);
             fluctuate = true
             currentPy = 6;
@@ -215,7 +220,7 @@ function animate() {
             currentTurn = currentTurn + 1;
       }
     }
-    if(gameEnded == false){
+    if(gameEnded == false){ //If game in not endend after move another piece is load to fluctate. IF there aren't any piece game is a drawn
         if(currentTurn < objectsPositions.length){
             objectsPositions[currentTurn].localMatrix = utils.MakeTranslateMatrix(currentPx,currentPy,currentPz);
             lastUpdateTime = currentTime; //Need to update it for the next frame
@@ -232,10 +237,12 @@ function drawScene(){
     animate()
     gl.clearColor(1.0, 1.0, 1.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    //Creation of view matrix and perspective matrix
     var eyePos = [cx, cy, cz];
     var viewMatrix = utils.MakeView(cx, cy, cz, elev, angle);
     var perspectiveMatrix = utils.MakePerspective(90, gl.canvas.width/gl.canvas.height, 0.1, 100.0);
-        
+
+    //Update World Matrix since his root
     basePositionNode.updateWorldMatrix();
     
     objects.forEach(function (object) {
@@ -279,12 +286,12 @@ var init = async function() {
     //utils.resizeCanvasToDisplaySize(gl.canvas);
        
       
-       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-       gl.enable(gl.DEPTH_TEST);
-       gl.clearColor(0, 0, 0, 0);
-       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    gl.enable(gl.DEPTH_TEST);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   
-
+    //Create shaders
     await utils.loadFiles([shaderDir + 'vs.glsl', shaderDir + 'fs.glsl'], function (shaderText) {
         var vertexShader = utils.createShader(gl, gl.VERTEX_SHADER, shaderText[0]);
         var fragmentShader = utils.createShader(gl, gl.FRAGMENT_SHADER, shaderText[1]);
@@ -293,7 +300,6 @@ var init = async function() {
         });
       
     // Load models
-    //
     var baseModelSerialized = await utils.get_objstr(baseModelSrc);
     baseModel = new OBJ.Mesh(baseModelSerialized);
 
