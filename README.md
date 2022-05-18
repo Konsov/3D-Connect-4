@@ -14,5 +14,6 @@ https://konsov.github.io/3D-Connect-4/
 
 **Commands** <br>
 - <kbd>1</kbd>, <kbd>2</kbd>, <kbd>3</kbd>, <kbd>4</kbd>, <kbd>5</kbd> Set differnt Camera
-- <kbd>w</kbd>,<kbd>a</kbd>, <kbd>s</kbd>, <kbd>d</kbd> Move Camera
+- <kbd>&uarr;</kbd>, <kbd>&darr;</kbd>,  Zoom Camera
+- <kbd>w</kbd>,<kbd>a</kbd>, <kbd>s</kbd>, <kbd>d</kbd> Move Token
 - <kbd>space</kbd> Insert Token
